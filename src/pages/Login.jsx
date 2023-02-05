@@ -1,10 +1,12 @@
 import styled from "styled-components"
+import { mobile } from "../responsive"
 
 const Container = styled.div`
     width: 100vw;
     height: 100vh;
-    background:linear-gradient(rgba(255,255,255,0.5),rgba(255,255,255,0.5)), url("https://drive.google.com/uc?export=view&id=1p48zC6bU0KecTXqerZLkjhdbGcgocW03") center;
-    background-size: 100%;
+    background:linear-gradient(rgba(255,255,255,0.5),rgba(255,255,255,0.5)), url("/assets/images/login.jpg") center;
+    background-size: cover;
+    background-repeat: no-repeat;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -13,6 +15,8 @@ const Wrapper = styled.div`
   width: 25%;
   padding: 20px;
   background-color: white;
+  border-radius: 20px;
+  ${mobile({ width: "75%" })}
 `
 const Title = styled.h1`
   font-size: 24px;
@@ -21,12 +25,15 @@ const Title = styled.h1`
 const Form = styled.form`
   display: flex;
   flex-direction: column;
-`
+  `
 const Input = styled.input`
   flex: 1;
   min-width: 40%;
   margin: 10px 0 ;
   padding: 10px;
+  border-radius: 5px;
+  border: none;
+  border: 1px solid #cccaca;
 `
 const Button = styled.button`
   width: 40%;
@@ -36,6 +43,8 @@ const Button = styled.button`
   color:white;
   cursor: pointer;
   margin-bottom: 10px;
+  border-radius: 10px;
+  ${mobile({ alignSelf: "center" })}
 `
 const Link = styled.a`
   margin: 5px 0px;

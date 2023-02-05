@@ -1,22 +1,28 @@
 import styled from "styled-components"
+import { mobile } from "../responsive"
 
 const Container = styled.div`
     width: 100vw;
     height: 100vh;
-    background:linear-gradient(rgba(255,255,255,0.5),rgba(255,255,255,0.5)), url("https://drive.google.com/uc?export=view&id=19ikEXMBRPKJ4VU9i4z1UhSc1Hl75Sdb8") center;
-    background-size: 100%;
+    background:linear-gradient(rgba(255,255,255,0.5),rgba(255,255,255,0.5)), url("/assets/images/register.jpg") ;
+    background-position: center;
+    background-size: cover;
     display: flex;
     align-items: center;
     justify-content: center;
+    ${mobile({ backgroundPosition: "right 22% bottom 20%" })}
 `
 const Wrapper = styled.div`
   width: 40%;
   padding: 20px;
   background-color: white;
+  border-radius: 20px;
+  ${mobile({ width: "75%" })}
 `
 const Title = styled.h1`
-  font-size: 24px;
+  font-size: 1.6rem;
   font-weight: 300;
+  ${mobile({ textAlign: "center" })}
 `
 const Form = styled.form`
   display: flex;
@@ -27,6 +33,9 @@ const Input = styled.input`
   min-width: 40%;
   margin: 20px 10px 0 0;
   padding: 10px;
+  border-radius: 5px;
+  border: none;
+  border: 1px solid #cccaca;
 `
 const Agreement = styled.span`
   font-size: 12px;
@@ -39,6 +48,9 @@ const Button = styled.button`
   background-color: teal;
   color:white;
   cursor: pointer;
+  border-radius: 10px;
+  font-size: 1.1rem;
+  ${mobile({ margin: "auto" })}
 `
 
 const Register = () => {

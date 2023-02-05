@@ -4,6 +4,7 @@ import Announcement from "../components/Announcement"
 import NewsLetter from "../components/NewsLetter"
 import Footer from "../components/Footer"
 import { Add, Remove } from "@mui/icons-material"
+import { mobile } from "../responsive"
 
 const Container = styled.div`
 
@@ -11,6 +12,7 @@ const Container = styled.div`
 const Wrapper = styled.div`
   display: flex;
   padding: 50px;
+  ${mobile({ padding: "10px", flexDirection: "column" })}
 `
 const ImageContainer = styled.div`
   flex: 1;
@@ -19,10 +21,12 @@ const Image = styled.img`
   width: 100%;
   height: 90vh;
   object-fit: cover;
+${mobile({ height: "30vh" })}
 `
 const InfoContainer = styled.div`
   flex: 1;
   padding: 0px 50px;
+  ${mobile({ padding: "10px" })}
 `
 const Title = styled.h2`
   font-weight: 200;
@@ -39,6 +43,7 @@ const FilterContainer = styled.div`
   margin: 30px 0px;
   display: flex;
   justify-content: space-between;
+  ${mobile({ width: "100%" })}
 `
 const Filter = styled.div`
   display: flex;
@@ -66,6 +71,7 @@ const AddContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  ${mobile({ width: "100%" })}
 `
 const AmountContainer = styled.div`
   display: flex;
@@ -100,7 +106,7 @@ const Product = () => {
       <Announcement />
       <Wrapper>
         <ImageContainer>
-          <Image src="https://drive.google.com/uc?export=view&id=1S9Pyd676crmI7pskKBB41cWY0REcGU2_" />
+          <Image src="/assets/images/cart.jpg" />
         </ImageContainer>
         <InfoContainer>
           <Title>Dress</Title>

@@ -6,10 +6,12 @@ import PinterestIcon from '@mui/icons-material/Pinterest';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
 import EmailIcon from '@mui/icons-material/Email';
+import { mobile } from "../responsive"
 
 
 const Container = styled.div`
   display: flex;
+  ${mobile({ flexDirection: "column" })}
 `
 const Left = styled.div`
   flex: 1;
@@ -40,6 +42,7 @@ const SocialIcon = styled.div`
 const Center = styled.div`
   flex:1;
   padding: 20px;
+  ${mobile({ display: "none" })}
 `
 const Title = styled.h3`
   margin-bottom: 30px;
@@ -59,6 +62,7 @@ const ListItem = styled.li`
 const Right = styled.div`
   flex:1;
   padding: 20px;
+  ${mobile({ backgroundColor: "#eee" })}
 `
 const ContactItem = styled.div`
 margin-bottom: 20px;
@@ -73,7 +77,7 @@ const Footer = () => {
   return (
     <Container>
       <Left>
-        <Logo>Mohammed</Logo>
+        <Logo>Shop.</Logo>
         <Desc>
           Lorem, ipsum dolor sit amet consectetur adipisicing elit. Itaque minima nisi eligendi. Laborum unde est pariatur voluptate amet rem tenetur eius rerum cumque, voluptatibus magni quibusdam ad numquam molestias dolore.
         </Desc>
