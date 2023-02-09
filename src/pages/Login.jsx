@@ -14,7 +14,7 @@ const Container = styled.div`
 const Wrapper = styled.div`
   width: 25%;
   padding: 20px;
-  background-color: white;
+  background-color: rgba(255, 255, 255,0.8);
   border-radius: 20px;
   ${mobile({ width: "75%" })}
 `
@@ -33,7 +33,8 @@ const Input = styled.input`
   padding: 10px;
   border-radius: 5px;
   border: none;
-  border: 1px solid #cccaca;
+  border: 1px solid rgb(204, 202, 202);
+  background-color: rgba(255, 255, 255,0.8);
 `
 const Button = styled.button`
   width: 40%;

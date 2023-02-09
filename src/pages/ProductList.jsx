@@ -1,3 +1,4 @@
+import { useState } from "react"
 import styled from "styled-components"
 import Announcement from "../components/Announcement"
 import Footer from "../components/Footer"
@@ -34,6 +35,15 @@ const Select = styled.select`
 const Option = styled.option``
 
 const ProductList = () => {
+  const [filters, setFilters] = useState({})
+
+  const handleSelectChange = (e) => {
+    setFilters({
+      ...filters,
+      [e.target.name]: e.target.value
+    })
+  }
+  console.log(filters)
   return (
     <Container>
       <Navbar />
@@ -42,7 +52,7 @@ const ProductList = () => {
       <FilterContainer>
         <Filter>
           <FilterText>Filter Products</FilterText>
-          <Select>
+          <Select name="color" onChange={handleSelectChange}>
             <Option disabled selected>
               Color
             </Option>
@@ -53,7 +63,7 @@ const ProductList = () => {
             <Option>Blue</Option>
             <Option>Pink</Option>
           </Select>
-          <Select>
+          <Select name="size" onChange={handleSelectChange}>
             <Option disabled selected>
               Size
             </Option>

@@ -15,7 +15,7 @@ const Container = styled.div`
 const Wrapper = styled.div`
   width: 40%;
   padding: 20px;
-  background-color: white;
+  background-color: rgba(255, 255, 255,0.8);
   border-radius: 20px;
   ${mobile({ width: "75%" })}
 `
@@ -36,6 +36,7 @@ const Input = styled.input`
   border-radius: 5px;
   border: none;
   border: 1px solid #cccaca;
+  background-color: rgba(255, 255, 255,0.5);
 `
 const Agreement = styled.span`
   font-size: 12px;

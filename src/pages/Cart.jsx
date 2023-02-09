@@ -170,7 +170,7 @@ const Cart = () => {
             <HR />
             <Product>
               <ProductDetail>
-                <Image src="https://drive.google.com/uc?export=view&id=1rrvykkdl9b64Hw0VdFvJp0Y0AtXbWHht" />
+                <Image src="/assets/images/cart.jpg" />
                 <Details>
                   <ProductName><b>Product:</b> Jeans</ProductName>
                   <ProductId><b>ID:</b> 4354351568</ProductId>
