@@ -3,6 +3,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import Badge from '@mui/material/Badge';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import { mobile } from "../responsive";
+import { Link } from "react-router-dom";
 
 const Container = styled.div`
     height: 60px;
@@ -46,6 +47,7 @@ text-align: center;
 
 const Logo = styled.h1`
   font-weight: bold;
+  color: black;
   ${mobile({ fontSize: "24px" })}
 `
 const Right = styled.div`
@@ -74,9 +76,11 @@ const Navbar = () => {
           </SearchContainer>
         </Left>
         <Center>
-          <Logo>
-            SHOP.
-          </Logo>
+          <Link style={{ textDecoration: "none" }} to={"/"}>
+            <Logo>
+              SHOP.
+            </Logo>
+          </Link>
         </Center>
         <Right>
           <MenueItem>Register</MenueItem>

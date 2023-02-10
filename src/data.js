@@ -32,27 +32,27 @@ export const sliderItems = [
 export const categories = [
   {
     id: 1,
-    img: "/assets/images/cat4.jpg",
-    title: "BAGS",
-    cat: "bags",
-  },
-  {
-    id: 2,
     img: "/assets/images/cat2.jpg",
     title: "SHOES",
     cat: "shoes",
   },
   {
+    id: 2,
+    img: "/assets/images/cat4.jpg",
+    title: "BAGS",
+    cat: "bags",
+  },
+  {
     id: 3,
     img: "/assets/images/cat3.jpg",
-    title: "WOMEN CLOTHES",
-    cat: "women",
+    title: "DRESSES",
+    cat: "dresses",
   },
   {
     id: 4,
     img: "/assets/images/cat1.jpg",
-    title: "BEACH CLOTHES",
-    cat: "swim",
+    title: "SHIRTS",
+    cat: "shirts",
   },
 ];
 
@@ -60,33 +60,41 @@ export const popularProducts = [
   {
     id: 1,
     img: "/assets/images/prod1.png",
+    cat: "bags",
   },
   {
     id: 2,
     img: "/assets/images/prod2.png",
+    cat: "bags",
   },
   {
     id: 3,
     img: "/assets/images/prod3.png",
+    cat: "shoes",
   },
   {
     id: 4,
     img: "/assets/images/prod4.png",
+    cat: "shoes",
   },
   {
     id: 5,
     img: "/assets/images/prod5.png",
+    cat: "women",
   },
   {
     id: 6,
     img: "/assets/images/prod6.png",
+    cat: "women",
   },
   {
     id: 7,
     img: "/assets/images/prod7.png",
+    cat: "swim",
   },
   {
     id: 8,
     img: "/assets/images/prod8.png",
+    cat: "swim",
   },
 ];
