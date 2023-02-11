@@ -1,9 +1,16 @@
+import React from "react"
 import styled from "styled-components"
 import Navbar from "../components/Navbar"
 import Announcement from "../components/Announcement"
 import Footer from "../components/Footer"
 import { Add, Remove } from "@mui/icons-material"
 import { mobile } from "../responsive"
+import { useSelector } from "react-redux"
+import { useEffect, useState } from "react"
+import { publicRequest } from "../requestMethods"
+import StripeCheckout from "react-stripe-checkout"
+import { useNavigate } from "react-router-dom"
+const stripeKey = "pk_test_51MZZ73DGrKqTRj4p9kiAh7cmqKaX3F5XYDs5fLHywXbjhAj6wAIYfkJbGnWrymYTEzlwW2m85DVxMQLuU5KJFxJW00Gv60GYRa"
 
 const Container = styled.div`
 
@@ -129,9 +136,36 @@ const SummaryButton = styled.button`
   background-color: black;
   color: white;
   font-weight: 600;
+  cursor: pointer;
 `
 
 const Cart = () => {
+
+  const cart = useSelector(state => state.cart)
+  const [stripeToken, setStripeToken] = useState(null)
+
+  const navigate = useNavigate()
+
+  const onToken = (token) => {
+    setStripeToken(token)
+  }
+  useEffect(() => {
+    const makeRequest = async () => {
+      try {
+        const res = await publicRequest.post("/checkout/payment", {
+          tokenId: stripeToken.id,
+          amount: cart.totalPrice * 100,
+          currency: "usd"
+        })
+        console.log(res.data)
+        navigate("/success")
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    stripeToken && makeRequest()
+  }, [stripeToken])
+
   return (
     <Container>
       <Navbar />
@@ -141,72 +175,64 @@ const Cart = () => {
         <Top>
           <TopButton >Continue Shopping</TopButton>
           <TopTexts>
-            <TopText>Shooping Bag (2)</TopText>
+            <TopText>Shooping Bag {`(${cart.quantity})`}</TopText>
             <TopText>Your Whishlist (0)</TopText>
           </TopTexts>
           <TopButton type="filled">Checkout Now</TopButton>
         </Top>
         <Bottom>
           <Info>
-            <Product>
-              <ProductDetail>
-                <Image src="/assets/images/cart.jpg" />
-                <Details>
-                  <ProductName><b>Product:</b> Jeans</ProductName>
-                  <ProductId><b>ID:</b> 4354351568</ProductId>
-                  <ProductColor color="red" />
-                  <ProductSize><b>Size:</b> 37.5</ProductSize>
-                </Details>
-              </ProductDetail>
-              <PriceDetail>
-                <ProductAmountContainer>
-                  <Add />
-                  <ProductAmount>2</ProductAmount>
-                  <Remove />
-                </ProductAmountContainer>
-                <ProductPrice>$20</ProductPrice>
-              </PriceDetail>
-            </Product>
-            <HR />
-            <Product>
-              <ProductDetail>
-                <Image src="/assets/images/cart.jpg" />
-                <Details>
-                  <ProductName><b>Product:</b> Jeans</ProductName>
-                  <ProductId><b>ID:</b> 4354351568</ProductId>
-                  <ProductColor color="red" />
-                  <ProductSize><b>Size:</b> 37.5</ProductSize>
-                </Details>
-              </ProductDetail>
-              <PriceDetail>
-                <ProductAmountContainer>
-                  <Add />
-                  <ProductAmount>2</ProductAmount>
-                  <Remove />
-                </ProductAmountContainer>
-                <ProductPrice>$20</ProductPrice>
-              </PriceDetail>
-            </Product>
+            {cart.products.map(prod => (<React.Fragment key={prod.id}>
+              <Product>
+                <ProductDetail>
+                  <Image src={prod.img} />
+                  <Details>
+                    <ProductName><b>Product:</b> {prod.title}</ProductName>
+                    <ProductId><b>ID:</b> {prod._id}</ProductId>
+                    <ProductColor color={prod.color} />
+                    <ProductSize><b>Size:</b> {prod.size}</ProductSize>
+                  </Details>
+                </ProductDetail>
+                <PriceDetail>
+                  <ProductAmountContainer>
+                    <Add />
+                    <ProductAmount>{prod.quantity}</ProductAmount>
+                    <Remove />
+                  </ProductAmountContainer>
+                  <ProductPrice>$ {prod.price * prod.quantity}</ProductPrice>
+                </PriceDetail>
+              </Product>
+              <HR />
+            </React.Fragment>))}
           </Info>
           <Summary>
             <SummaryTitle>Order Summary</SummaryTitle>
             <SummaryItem>
               <SummaryItemText>Subtotal</SummaryItemText>
-              <SummaryItemPrice>$ 80</SummaryItemPrice>
+              <SummaryItemPrice>$ {cart.totalPrice}</SummaryItemPrice>
             </SummaryItem>
             <SummaryItem>
               <SummaryItemText>estimated Shipping</SummaryItemText>
-              <SummaryItemPrice>$ 20</SummaryItemPrice>
+              <SummaryItemPrice>$ {cart.totalPrice * 0.02}</SummaryItemPrice>
             </SummaryItem>
             <SummaryItem>
               <SummaryItemText>Discount</SummaryItemText>
-              <SummaryItemPrice>$ -5.6</SummaryItemPrice>
+              <SummaryItemPrice>$ {cart.totalPrice * 0.05}</SummaryItemPrice>
             </SummaryItem>
             <SummaryItem type="total">
               <SummaryItemText>Total</SummaryItemText>
-              <SummaryItemPrice>$ 80</SummaryItemPrice>
+              <SummaryItemPrice>$ {(cart.totalPrice * 0.97).toFixed(2)}</SummaryItemPrice>
             </SummaryItem>
-            <SummaryButton>Checkout Now</SummaryButton>
+            <StripeCheckout
+              name="Mohammed Shop"
+              billingAddress
+              shippingAddress
+              token={onToken}
+              stripeKey={stripeKey}
+              amount={cart.totalPrice * 0.97 * 100}
+            >
+              <SummaryButton>Checkout Now</SummaryButton>
+            </StripeCheckout>
           </Summary>
         </Bottom>
       </Wrapper>
