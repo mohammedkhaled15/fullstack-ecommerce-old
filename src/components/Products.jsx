@@ -35,12 +35,10 @@ const Products = ({ cat, filters, sort }) => {
     cat ? setFilteredProducts(products.filter(product => Object.entries(filters).every(([key, value]) => product[key].includes(value))).sort((a, b) => a.createdAt - b.createdAt)) : setFilteredProducts(products.slice(0, 8).sort((a, b) => a.createdAt - b.createdAt))
   }, [filters, products, cat])
 
-  console.log(filteredProducts.map(a => a.createdAt))
 
   useEffect(() => {
     if (sort === "newest") {
       setFilteredProducts(prev => [...prev].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt)))
-      console.log(sort)
     } else if (sort === "priceAsc") {
       setFilteredProducts(prev => [...prev].sort((a, b) => a.price - b.price))
     } else if (sort === "priceDesc") {

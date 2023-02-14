@@ -1,21 +1,41 @@
 import styled from "styled-components"
+import { useLocation } from "react-router-dom"
+import { useEffect, useState } from "react"
+import { privateRequest } from "../requestMethods"
 
-const Badge = styled.div`
-    width: 200px;
-    background-color: #0e9625;
-    color:white;
-    padding: 20px;
-    text-align: center;
-    font-size: 40px;
+const Container = styled.div`
+    height: "100vh";
+        display: "flex";
+        flex-direction: "column";
+        align-items: "center";
+        justify-content: "center";
 `
 
 const Success = () => {
-    return (
-        <div>
-            <Badge>Successful</Badge>
-            <h1>Your Order is being Prepared</h1>
-        </div>
-    )
+  const [orderId, setOrderId] = useState(null)
+  const location = useLocation()
+  const cart = location.state.cart
+  const stripeData = location.state.stripeData
+  console.log(cart, stripeData)
+  useEffect(() => {
+    const makeRequest = async () => {
+      try {
+        // const res = await privateRequest.post("/orders", {
+        //   userId:
+        // })
+      } catch (error) {
+
+      }
+    }
+  }, [orderId])
+
+  return (
+    <Container>
+      {orderId
+        ? `Order has been created successfully. Your order number is ${orderId}`
+        : `Successfull. Your order is being prepared...`}
+    </Container>
+  )
 }
 
 export default Success

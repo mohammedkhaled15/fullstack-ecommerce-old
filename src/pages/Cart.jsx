@@ -7,11 +7,10 @@ import { Add, Remove } from "@mui/icons-material"
 import { mobile } from "../responsive"
 import { useSelector } from "react-redux"
 import { useEffect, useState } from "react"
-import { publicRequest } from "../requestMethods"
+import { privateRequest } from "../requestMethods"
 import StripeCheckout from "react-stripe-checkout"
 import { useNavigate } from "react-router-dom"
-const stripeKey = "pk_test_51MZZ73DGrKqTRj4p9kiAh7cmqKaX3F5XYDs5fLHywXbjhAj6wAIYfkJbGnWrymYTEzlwW2m85DVxMQLuU5KJFxJW00Gv60GYRa"
-
+const stripeKey = process.env.REACT_APP_STRIPE
 const Container = styled.div`
 
 `
@@ -152,18 +151,18 @@ const Cart = () => {
   useEffect(() => {
     const makeRequest = async () => {
       try {
-        const res = await publicRequest.post("/checkout/payment", {
+        const res = await privateRequest.post("/checkout/payment", {
           tokenId: stripeToken.id,
           amount: cart.totalPrice * 100,
           currency: "usd"
         })
         console.log(res.data)
-        navigate("/success")
+        navigate("/success", { state: { stripeData: res.data, cart } })
       } catch (error) {
         console.log(error)
       }
     }
-    stripeToken && makeRequest()
+    stripeToken && cart.totalPrice > 0 && makeRequest()
   }, [stripeToken])
 
   return (
@@ -182,28 +181,30 @@ const Cart = () => {
         </Top>
         <Bottom>
           <Info>
-            {cart.products.map(prod => (<React.Fragment key={prod.id}>
-              <Product>
-                <ProductDetail>
-                  <Image src={prod.img} />
-                  <Details>
-                    <ProductName><b>Product:</b> {prod.title}</ProductName>
-                    <ProductId><b>ID:</b> {prod._id}</ProductId>
-                    <ProductColor color={prod.color} />
-                    <ProductSize><b>Size:</b> {prod.size}</ProductSize>
-                  </Details>
-                </ProductDetail>
-                <PriceDetail>
-                  <ProductAmountContainer>
-                    <Add />
-                    <ProductAmount>{prod.quantity}</ProductAmount>
-                    <Remove />
-                  </ProductAmountContainer>
-                  <ProductPrice>$ {prod.price * prod.quantity}</ProductPrice>
-                </PriceDetail>
+            {cart.products.map(prod => (
+              <Product key={prod._id}>
+                <React.Fragment >
+                  <ProductDetail>
+                    <Image src={prod.img} />
+                    <Details>
+                      <ProductName><b>Product:</b> {prod.title}</ProductName>
+                      <ProductId><b>ID:</b> {prod._id}</ProductId>
+                      <ProductColor color={prod.color} />
+                      <ProductSize><b>Size:</b> {prod.size}</ProductSize>
+                    </Details>
+                  </ProductDetail>
+                  <PriceDetail>
+                    <ProductAmountContainer>
+                      <Add />
+                      <ProductAmount>{prod.quantity}</ProductAmount>
+                      <Remove />
+                    </ProductAmountContainer>
+                    <ProductPrice>$ {prod.price * prod.quantity}</ProductPrice>
+                  </PriceDetail>
+                </React.Fragment>
+                <HR />
               </Product>
-              <HR />
-            </React.Fragment>))}
+            ))}
           </Info>
           <Summary>
             <SummaryTitle>Order Summary</SummaryTitle>
@@ -227,6 +228,8 @@ const Cart = () => {
               name="Mohammed Shop"
               billingAddress
               shippingAddress
+              image="https://drive.google.com/uc?export=view&id=1wS2DHvRkbhmtkmDH2iXokN-5xxDWFIJ_"
+              description={`Your total amount is ${cart.totalPrice}`}
               token={onToken}
               stripeKey={stripeKey}
               amount={cart.totalPrice * 0.97 * 100}
@@ -238,7 +241,7 @@ const Cart = () => {
       </Wrapper>
 
       <Footer />
-    </Container>
+    </Container >
   )
 }
 

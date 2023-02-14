@@ -1,5 +1,10 @@
 import styled from "styled-components"
 import { mobile } from "../responsive"
+import { useState } from "react"
+import { useDispatch, useSelector } from "react-redux"
+import { login } from "../redux/userSlice"
+import LoaderSpinner from "../components/LoaderSpinner"
+import { useNavigate } from "react-router-dom"
 
 const Container = styled.div`
     width: 100vw;
@@ -12,7 +17,7 @@ const Container = styled.div`
     justify-content: center;
 `
 const Wrapper = styled.div`
-  width: 25%;
+  width: 35%;
   padding: 20px;
   background-color: rgba(255, 255, 255,0.8);
   border-radius: 20px;
@@ -53,18 +58,40 @@ const Link = styled.a`
   text-decoration: underline;
   cursor: pointer;
 `
+const Error = styled.h5`
+  color: red;
+  background-color: #f7a0a0;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  text-align: center;
+`
 
 const Login = () => {
+  const [username, setUsername] = useState("")
+  const [password, setPassword] = useState("")
+  const dispatch = useDispatch()
+  const { isFetching, error } = useSelector(state => state.user)
+  const navigate = useNavigate()
+
+  const handleClick = (e) => {
+    e.preventDefault()
+    login(dispatch, { username, password })
+  }
   return (
     <Container>
+      {
+        isFetching && <LoaderSpinner />
+      }
       <Wrapper>
+        {error && <Error>Something Went Wrong...</Error>}
         <Title>SIGN IN</Title>
         <Form>
-          <Input placeholder="username" />
-          <Input placeholder="password" />
-          <Button>LOGIN</Button>
+          <Input placeholder="username" onChange={(e) => setUsername(e.target.value)} />
+          <Input placeholder="password" type="password" onChange={(e) => setPassword(e.target.value)} />
+          <Button onClick={handleClick}>LOGIN</Button>
           <Link>DO NOT YOU REMEMBER THE PASSWORD</Link>
-          <Link>CREATE A NEW ACCOUNT</Link>
+          <Link onClick={() => navigate("/register")}>CREATE A NEW ACCOUNT</Link>
         </Form>
       </Wrapper>
     </Container>

@@ -3,8 +3,11 @@ import SearchIcon from '@mui/icons-material/Search';
 import Badge from '@mui/material/Badge';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import { mobile } from "../responsive";
-import { Link } from "react-router-dom";
-import { useSelector, dispatch } from "react-redux"
+import { Link, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux"
+import { resetUser } from "../redux/userSlice";
+import { resetCart } from "../redux/cartSlice";
+import { persistor } from "../redux/store";
 
 
 const Container = styled.div`
@@ -63,12 +66,24 @@ const MenueItem = styled.div`
 font-size: 14px;
 cursor: pointer;
 margin-left: 25px;
+border-radius: 4px;
+background-color: ${props => props.color};
+padding: ${props => props.color === "teal" ? "10px" : "0"};
 ${mobile({ fontSize: "12px", marginLeft: "10px" })}
 `
 
 const Navbar = () => {
   const cart = useSelector(state => state.cart)
-  console.log(cart)
+  const user = useSelector(state => state.user)
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+
+  const handleLogout = () => {
+    persistor.purge()
+    dispatch(resetUser())
+    dispatch(resetCart())
+    navigate("/login", { replace: true })
+  }
   return (
     <Container>
       <Wrapper>
@@ -87,10 +102,13 @@ const Navbar = () => {
           </Link>
         </Center>
         <Right>
-          <MenueItem>Register</MenueItem>
-          <MenueItem>Sign Up</MenueItem>
-          <Link to={"/cart"}>
-            <MenueItem>
+          {!user.currentUser ? <>
+            <MenueItem color="teal" onClick={() => navigate("/register")}>Register</MenueItem>
+            <MenueItem color="teal" onClick={() => navigate("/login")}>Sign In</MenueItem>
+          </> : <MenueItem color="teal" onClick={handleLogout}>Log Out</MenueItem>
+          }
+          <Link to={cart.qauntity ? "/cart" : null}>
+            <MenueItem color="inherit">
               <Badge badgeContent={cart.quantity} color="success">
                 <ShoppingCartOutlinedIcon />
               </Badge>
