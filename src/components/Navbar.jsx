@@ -44,12 +44,10 @@ const Input = styled.input`
   border:none;
   ${mobile({ width: "50px" })}
 `
-
 const Center = styled.div`
 flex:1; 
 text-align: center;
 `
-
 const Logo = styled.h1`
   font-weight: bold;
   color: black;
@@ -73,7 +71,10 @@ ${mobile({ fontSize: "12px", marginLeft: "10px" })}
 `
 
 const Navbar = () => {
+
+
   const cart = useSelector(state => state.cart)
+
   const user = useSelector(state => state.user)
   const dispatch = useDispatch()
   const navigate = useNavigate()
@@ -82,7 +83,7 @@ const Navbar = () => {
     persistor.purge()
     dispatch(resetUser())
     dispatch(resetCart())
-    navigate("/login", { replace: true })
+    navigate("/", { replace: true })
   }
   return (
     <Container>
@@ -102,12 +103,17 @@ const Navbar = () => {
           </Link>
         </Center>
         <Right>
-          {!user.currentUser ? <>
-            <MenueItem color="teal" onClick={() => navigate("/register")}>Register</MenueItem>
-            <MenueItem color="teal" onClick={() => navigate("/login")}>Sign In</MenueItem>
-          </> : <MenueItem color="teal" onClick={handleLogout}>Log Out</MenueItem>
+          {!user.currentUser ?
+            <>
+              <MenueItem color="teal" onClick={() => navigate("/register")}>Register</MenueItem>
+              <MenueItem color="teal" onClick={() => navigate("/login")}>Sign In</MenueItem>
+            </> :
+            <>
+              <MenueItem>{`Welcome ${user?.currentUser?.username}`}</MenueItem>
+              <MenueItem color="teal" onClick={handleLogout}>Log Out</MenueItem>
+            </>
           }
-          <Link to={cart.qauntity ? "/cart" : null}>
+          <Link to={cart.quantity > 0 ? "/cart" : ""}>
             <MenueItem color="inherit">
               <Badge badgeContent={cart.quantity} color="success">
                 <ShoppingCartOutlinedIcon />

@@ -1,6 +1,6 @@
 import styled from "styled-components"
 import { mobile } from "../responsive"
-import { useState } from "react"
+import { useState, useRef, useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { login } from "../redux/userSlice"
 import LoaderSpinner from "../components/LoaderSpinner"
@@ -73,6 +73,11 @@ const Login = () => {
   const dispatch = useDispatch()
   const { isFetching, error } = useSelector(state => state.user)
   const navigate = useNavigate()
+  const userRef = useRef()
+
+  useEffect(() => {
+    userRef.current.focus()
+  }, [])
 
   const handleClick = (e) => {
     e.preventDefault()
@@ -87,7 +92,7 @@ const Login = () => {
         {error && <Error>Something Went Wrong...</Error>}
         <Title>SIGN IN</Title>
         <Form>
-          <Input placeholder="username" onChange={(e) => setUsername(e.target.value)} />
+          <Input placeholder="username" onChange={(e) => setUsername(e.target.value)} ref={userRef} />
           <Input placeholder="password" type="password" onChange={(e) => setPassword(e.target.value)} />
           <Button onClick={handleClick}>LOGIN</Button>
           <Link>DO NOT YOU REMEMBER THE PASSWORD</Link>

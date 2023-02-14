@@ -11,8 +11,15 @@ const cartSlice = createSlice({
   initialState,
   reducers: {
     addProduct: (state, action) => {
+      const indexOfSameProd = state?.products?.findIndex(
+        (prod) => prod._id === action.payload._id
+      );
+      if (indexOfSameProd !== -1) {
+        state.products[indexOfSameProd].quantity += action.payload.quantity;
+      } else {
+        state.products.push(action.payload);
+      }
       state.quantity += 1;
-      state.products.push(action.payload);
       state.totalPrice += action.payload.price * action.payload.quantity;
     },
     resetCart: () => initialState,

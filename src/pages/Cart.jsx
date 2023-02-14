@@ -5,15 +5,16 @@ import Announcement from "../components/Announcement"
 import Footer from "../components/Footer"
 import { Add, Remove } from "@mui/icons-material"
 import { mobile } from "../responsive"
-import { useSelector } from "react-redux"
+import { useSelector, useDispatch } from "react-redux"
 import { useEffect, useState } from "react"
 import { privateRequest } from "../requestMethods"
 import StripeCheckout from "react-stripe-checkout"
 import { useNavigate } from "react-router-dom"
-const stripeKey = process.env.REACT_APP_STRIPE
-const Container = styled.div`
+import { resetCart } from "../redux/cartSlice"
 
-`
+const stripeKey = process.env.REACT_APP_STRIPE
+
+const Container = styled.div``
 const Wrapper = styled.div`
   padding: 20px;
   ${mobile({ padding: "10px" })}
@@ -141,6 +142,9 @@ const SummaryButton = styled.button`
 const Cart = () => {
 
   const cart = useSelector(state => state.cart)
+  const user = useSelector(state => state.user)
+  const dispatch = useDispatch()
+
   const [stripeToken, setStripeToken] = useState(null)
 
   const navigate = useNavigate()
@@ -148,6 +152,7 @@ const Cart = () => {
   const onToken = (token) => {
     setStripeToken(token)
   }
+
   useEffect(() => {
     const makeRequest = async () => {
       try {
@@ -156,14 +161,20 @@ const Cart = () => {
           amount: cart.totalPrice * 100,
           currency: "usd"
         })
+        const dbres = await privateRequest.post("/cart", JSON.stringify({
+          userID: user.currentUser._id,
+          products: [...cart.products.map(prod => ({ prodID: prod._id, quantity: prod.quantity }))]
+        }))
+        dispatch(resetCart())
         console.log(res.data)
+        console.log(dbres.data)
         navigate("/success", { state: { stripeData: res.data, cart } })
       } catch (error) {
         console.log(error)
       }
     }
     stripeToken && cart.totalPrice > 0 && makeRequest()
-  }, [stripeToken])
+  }, [stripeToken, cart, navigate])
 
   return (
     <Container>

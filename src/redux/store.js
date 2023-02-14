@@ -12,6 +12,7 @@ import {
   REGISTER,
 } from "redux-persist";
 import storage from "redux-persist/lib/storage";
+
 const persistConfig = {
   key: "root",
   version: 1,
@@ -22,10 +23,6 @@ const appReducer = combineReducers({ user: userReducer, cart: cartReducer });
 
 // To create logout action activate when dispatched
 const rootReducer = (state, action) => {
-  // if (action.typy === logout.type) {
-  //   storage.removeItem("persist:root");
-  //   return rootReducer(undefined, action);
-  // }
   return appReducer(state, action);
 };
 
