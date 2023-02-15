@@ -161,20 +161,15 @@ const Cart = () => {
           amount: cart.totalPrice * 100,
           currency: "usd"
         })
-        const dbres = await privateRequest.post("/cart", JSON.stringify({
-          userID: user.currentUser._id,
-          products: [...cart.products.map(prod => ({ prodID: prod._id, quantity: prod.quantity }))]
-        }))
         dispatch(resetCart())
         console.log(res.data)
-        console.log(dbres.data)
-        navigate("/success", { state: { stripeData: res.data, cart } })
+        navigate("/success", { state: { stripeData: res.data, cart, user }, replace: true })
       } catch (error) {
         console.log(error)
       }
     }
     stripeToken && cart.totalPrice > 0 && makeRequest()
-  }, [stripeToken, cart, navigate])
+  }, [stripeToken, cart, navigate, user])
 
   return (
     <Container>

@@ -2,6 +2,7 @@ import styled from "styled-components"
 import { useLocation } from "react-router-dom"
 import { useEffect, useState } from "react"
 import { privateRequest } from "../requestMethods"
+import { useSelector } from "react-redux"
 
 const Container = styled.div`
     height: "100vh";
@@ -16,24 +17,39 @@ const Success = () => {
   const location = useLocation()
   const cart = location.state.cart
   const stripeData = location.state.stripeData
-  console.log(cart, stripeData)
+  const user = useSelector(state => state.user)
+  console.log(stripeData)
+
+  useEffect(() => {
+    setOrderId(stripeData.id)
+  }, [stripeData.id])
+
   useEffect(() => {
     const makeRequest = async () => {
       try {
-        // const res = await privateRequest.post("/orders", {
-        //   userId:
-        // })
+        const res = await privateRequest.post("/orders", {
+          userID: user.currentUser._id,
+          products: [...cart.products.map(prod => {
+            return {
+              productID: prod._id,
+              quantity: prod.quantity
+            }
+          })],
+          amount: stripeData.amount,
+          address: stripeData.billing_details.address,
+          status: stripeData.status,
+        })
+        console.log(res.data)
       } catch (error) {
-
+        console.log(error.response.data.error.message)
       }
     }
-  }, [orderId])
+    orderId && makeRequest()
+  }, [cart.products, cart.totalPrice, orderId, stripeData.amount, stripeData.billing_details.address, stripeData.source, stripeData.status, user.currentUser._id])
 
   return (
     <Container>
-      {orderId
-        ? `Order has been created successfully. Your order number is ${orderId}`
-        : `Successfull. Your order is being prepared...`}
+      {`Order has been created successfully. Your order number is ${orderId}, thanks ${user.currentUser.username}`}
     </Container>
   )
 }
