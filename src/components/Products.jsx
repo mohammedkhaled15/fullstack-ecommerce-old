@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react"
 import styled from "styled-components"
 import ProductItem from "./ProductItem"
-import { publicRequest } from "../requestMethods"
+import { privateRequest } from "../requestMethods"
+import { useNavigate } from "react-router-dom"
 
 const Container = styled.div`
     padding: 20px;
@@ -15,21 +16,22 @@ const Title = styled.h2`
 `
 
 const Products = ({ cat, filters, sort }) => {
-
+  const navigate = useNavigate()
   const [products, setProducts] = useState([])
   const [filteredProducts, setFilteredProducts] = useState([])
 
   useEffect(() => {
     const getAllProducts = async () => {
       try {
-        const res = await publicRequest.get(cat ? `/products?category=${cat}` : `/products`)
-        setProducts(res.data)
+        const res = await privateRequest.get(cat ? `/products?category=${cat}` : `/products`)
+        if (res?.data) setProducts(res.data)
       } catch (error) {
         console.log(error)
+        navigate("/", { replace: true })
       }
     }
     getAllProducts()
-  }, [cat])
+  }, [cat, navigate])
 
   useEffect(() => {
     cat ? setFilteredProducts(products.filter(product => Object.entries(filters).every(([key, value]) => product[key].includes(value))).sort((a, b) => a.createdAt - b.createdAt)) : setFilteredProducts(products.slice(0, 8).sort((a, b) => a.createdAt - b.createdAt))

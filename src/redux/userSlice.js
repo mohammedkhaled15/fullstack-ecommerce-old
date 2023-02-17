@@ -13,6 +13,16 @@ export const login = async (dispatch, user) => {
     dispatch(loginFailure());
   }
 };
+
+export const logout = async (dispatch) => {
+  try {
+    const res = await publicRequest.get("/auth/logout");
+    dispatch(resetUser());
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 const initialState = {
   currentUser: null,
   isFetching: false,
@@ -26,12 +36,22 @@ const userSlice = createSlice({
     loginStart: (state) => {
       state.isFetching = true;
     },
+    logoutStart: (state) => {
+      state.isFetching = true;
+    },
     loginSuccess: (state, action) => {
       state.isFetching = false;
       state.currentUser = action.payload;
       state.error = false;
     },
+    updateAccessToken: (state, action) => {
+      state.currentUser.accessToken = action.payload.accessToken;
+    },
     loginFailure: (state) => {
+      state.isFetching = false;
+      state.error = true;
+    },
+    logoutFailure: (state) => {
       state.isFetching = false;
       state.error = true;
     },
@@ -44,6 +64,13 @@ const userSlice = createSlice({
   },
 });
 
-export const { loginStart, loginSuccess, loginFailure, resetUser } =
-  userSlice.actions;
+export const {
+  loginStart,
+  logoutStart,
+  loginSuccess,
+  loginFailure,
+  logoutFailure,
+  resetUser,
+  updateAccessToken,
+} = userSlice.actions;
 export default userSlice.reducer;

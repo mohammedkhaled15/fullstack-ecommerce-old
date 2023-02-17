@@ -5,9 +5,10 @@ import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import { mobile } from "../responsive";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux"
-import { resetUser } from "../redux/userSlice";
+import { logout, resetUser } from "../redux/userSlice";
 import { resetCart } from "../redux/cartSlice";
 import { persistor } from "../redux/store";
+import useRefreshToken from "../hooks/useRefreshToken";
 
 
 const Container = styled.div`
@@ -72,7 +73,7 @@ ${mobile({ fontSize: "12px", marginLeft: "10px" })}
 
 const Navbar = () => {
 
-
+  const refresh = useRefreshToken()
   const cart = useSelector(state => state.cart)
 
   const user = useSelector(state => state.user)
@@ -81,7 +82,7 @@ const Navbar = () => {
 
   const handleLogout = () => {
     persistor.purge()
-    dispatch(resetUser())
+    logout(dispatch)
     dispatch(resetCart())
     navigate("/", { replace: true })
   }
@@ -121,6 +122,7 @@ const Navbar = () => {
             </MenueItem>
           </Link>
         </Right>
+        {/* <button onClick={() => refresh()}>Refresh</button> */}
       </Wrapper>
     </Container>
   )

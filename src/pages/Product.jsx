@@ -7,7 +7,8 @@ import { Add, Remove } from "@mui/icons-material"
 import { mobile } from "../responsive"
 import { useLocation } from "react-router-dom"
 import { useEffect, useState } from "react"
-import { publicRequest } from "../requestMethods"
+// import { privateRequest } from "../requestMethods"
+import usePrivateRequest from "../hooks/usePrivateRequestInterceptors"
 import { useDispatch } from "react-redux"
 import { addProduct } from "../redux/cartSlice"
 
@@ -108,6 +109,7 @@ const Button = styled.button`
 const Product = () => {
   const location = useLocation()
   const productId = location.pathname.split("/")[2]
+  const privateRequest = usePrivateRequest()
 
   const [product, setProduct] = useState({})
   const [quantity, setQuantity] = useState(1)
@@ -131,14 +133,14 @@ const Product = () => {
   useEffect(() => {
     const getProductById = async () => {
       try {
-        const res = await publicRequest.get(`products/${productId}`)
+        const res = await privateRequest.get(`products/${productId}`)
         setProduct(res.data)
       } catch (error) {
         console.log(error)
       }
     }
     getProductById()
-  }, [productId])
+  }, [privateRequest, productId])
 
   return (
     <Container>
