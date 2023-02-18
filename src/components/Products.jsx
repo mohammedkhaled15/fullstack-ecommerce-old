@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import styled from "styled-components"
 import ProductItem from "./ProductItem"
-import { privateRequest } from "../requestMethods"
+import { publicRequest } from "../requestMethods"
 import { useNavigate } from "react-router-dom"
 
 const Container = styled.div`
@@ -23,7 +23,7 @@ const Products = ({ cat, filters, sort }) => {
   useEffect(() => {
     const getAllProducts = async () => {
       try {
-        const res = await privateRequest.get(cat ? `/products?category=${cat}` : `/products`)
+        const res = await publicRequest.get(cat ? `/products?category=${cat}` : `/products`)
         if (res?.data) setProducts(res.data)
       } catch (error) {
         console.log(error)

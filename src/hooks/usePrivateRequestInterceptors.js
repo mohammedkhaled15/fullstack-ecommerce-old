@@ -12,6 +12,7 @@ const usePrivateRequest = () => {
       (config) => {
         if (!config.headers["token"]) {
           config.headers["token"] = `Bearer ${user?.accessToken}`;
+          console.log(user.accessToken);
         }
         return config;
       },

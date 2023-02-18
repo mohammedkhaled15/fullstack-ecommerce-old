@@ -6,8 +6,10 @@ const useRefreshToken = () => {
   const dispatch = useDispatch();
   const getAccessToken = async () => {
     try {
-      const res = await publicRequest.get("/auth/refresh");
-      const accessToken = res.data;
+      const res = await publicRequest.get("/auth/refresh", {
+        withCredentials: true,
+      });
+      const { accessToken } = res.data;
       console.log(`new One ${accessToken}`);
       dispatch(updateAccessToken(accessToken));
       return accessToken;

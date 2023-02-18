@@ -6,7 +6,9 @@ import { publicRequest } from "../requestMethods";
 export const login = async (dispatch, user) => {
   dispatch(loginStart());
   try {
-    const res = await publicRequest.post("/auth/login", user);
+    const res = await publicRequest.post("/auth/login", user, {
+      withCredentials: true, // to set cookies httpOnly from backend server
+    });
     dispatch(loginSuccess(res.data));
     console.log(res.data);
   } catch (error) {
@@ -45,7 +47,7 @@ const userSlice = createSlice({
       state.error = false;
     },
     updateAccessToken: (state, action) => {
-      state.currentUser.accessToken = action.payload.accessToken;
+      state.currentUser.accessToken = action.payload;
     },
     loginFailure: (state) => {
       state.isFetching = false;
