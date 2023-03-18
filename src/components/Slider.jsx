@@ -89,7 +89,7 @@ const Slider = () => {
 
   useEffect(() => {
     setTimeout(() =>
-      setSlideIndex(prev => prev === sliderItems.length - 1 ? 0 : prev + 1), delay
+      setSlideIndex(prev => prev === sliderItems.length - 1 ? 0 : prev + 1)
       , delay)
   }, [slideIndex])
 

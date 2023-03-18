@@ -169,7 +169,7 @@ const Cart = () => {
       }
     }
     stripeToken && cart.totalPrice > 0 && makeRequest()
-  }, [stripeToken, cart, navigate, user])
+  }, [stripeToken, cart, navigate, user, dispatch])
 
   return (
     <Container>

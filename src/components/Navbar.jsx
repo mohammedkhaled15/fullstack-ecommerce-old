@@ -5,7 +5,7 @@ import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import { mobile } from "../responsive";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux"
-import { logout, resetUser } from "../redux/userSlice";
+import { logout } from "../redux/userSlice";
 import { resetCart } from "../redux/cartSlice";
 import { persistor } from "../redux/store";
 import useRefreshToken from "../hooks/useRefreshToken";
