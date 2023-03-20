@@ -1,8 +1,8 @@
 import styled from "styled-components"
 import { useLocation } from "react-router-dom"
 import { useEffect, useState } from "react"
-import { privateRequest } from "../requestMethods"
 import { useSelector } from "react-redux"
+import usePrivateRequest from "./../hooks/usePrivateRequestInterceptors"
 
 const Container = styled.div`
     height: "100vh";
@@ -18,6 +18,7 @@ const Success = () => {
   const cart = location.state.cart
   const stripeData = location.state.stripeData
   const user = useSelector(state => state.user)
+  const privateRequest = usePrivateRequest()
   console.log(stripeData)
 
   useEffect(() => {
