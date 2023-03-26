@@ -3,6 +3,9 @@ import { mobile } from "../responsive"
 import { publicRequest } from "../requestMethods"
 import { useState, useRef, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
+import FileUploadIcon from '@mui/icons-material/FileUpload';
+import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import app from "../firebaseConfig"
 
 const Container = styled.div`
     width: 100vw;
@@ -60,12 +63,34 @@ const Button = styled.button`
 const Error = styled.p`
   color: red;
   background-color: #af8686;
-  font-size: 26px;
+  font-size: 20px;
   font-weight: 700;
   padding: 10px;
   margin-bottom: 5px;
   border-radius: 7px;
   text-align: center;
+`
+const ImageUpload = styled.div`
+  flex: 1;
+  min-width: 50%;
+  margin: 20px 10px 0 0;
+  background-color: rgba(255, 255, 255,0.5);
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+`
+const ProfilePreview = styled.img`
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  border-radius: 8px;
+  padding: 0px 25px;
+`
+const ImageInput = styled.input`
+  display: none;
+`
+const UploadLabel = styled.label`
+  cursor: pointer;
 `
 const Success = styled.p`
   color: #0f5526;
@@ -104,6 +129,9 @@ const Register = () => {
   const [confPassword, setConfPassword] = useState("")
   const [validConfPassword, setValidConfPassword] = useState(false)
 
+  const [imageFile, setImageFile] = useState("")
+  const [profileImg, setProfileImg] = useState("/assets/images/defaultUser.png")
+
   const [error, setError] = useState("")
   const [success, setSuccess] = useState("")
 
@@ -133,35 +161,81 @@ const Register = () => {
     setEmail("")
     setPassword("")
     setConfPassword("")
+    setProfileImg("/assets/images/defaultUser.png")
   }
 
   const handleRegister = async (e) => {
     e.preventDefault()
-
     // followed lines to precheck if someone sign up without enable sign up button (hack)
     const v1 = USER_REGEX.test(username)
     const v2 = PWD_REGEX.test(password)
-    if (!v1 || !v2) {
-      setError("Invaild Entry")
+    if (!v1) {
+      setError("Invaild username Pattern!")
       setSuccess("")
       return
-    }
+    } else if (!v2) {
+      setError("Invaild password Pattern!")
+      setSuccess("")
+      return
 
+    }
     try {
-      const res = await publicRequest.post("/auth/register", JSON.stringify({ username, password, email }), {
+      const res = await publicRequest.post("/auth/register", JSON.stringify({ firstname, lastname, username, password, email, img: profileImg }), {
         headers: { 'Content-Type': "application/json" },
       })
       formReset()
       setSuccess(`You Have Registered successfully as ${username}`)
     } catch (error) {
       setSuccess("")
+      console.log(error)
       if (!error?.response) {
         setError("No Server Response")
+      } else if (error?.response?.data?.code === 11000) {
+        setError("Username Already Registered Before!")
       } else {
         setError("Registeration Failed")
       }
     }
   }
+
+  useEffect(() => {
+    const handleImgUpload = async () => {
+      const fileName = new Date().getTime() + imageFile.name
+      const storage = getStorage(app); // Create a root reference
+      const storageRef = ref(storage, 'profileImgs/' + fileName);
+      const uploadTask = uploadBytesResumable(storageRef, imageFile);
+      // Listen for state changes, errors, and completion of the upload.
+      uploadTask.on('state_changed',
+        (snapshot) => {
+          // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log('Upload is ' + progress + '% done');
+          switch (snapshot.state) {
+            case 'paused':
+              console.log('Upload is paused');
+              break;
+            case 'running':
+              console.log('Upload is running');
+              break;
+            default:
+          }
+        },
+        (error) => {
+          console.log(error)
+        },
+        () => {
+          // Upload completed successfully, now we can get the download URL
+          getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+            console.log('File available at', downloadURL);
+            setProfileImg(downloadURL)
+          });
+        }
+      );
+    }
+    imageFile && handleImgUpload()
+  }, [imageFile])
+
+
 
   return (
     <Container>
@@ -176,6 +250,13 @@ const Register = () => {
           <Input placeholder="email" value={email} onChange={(e) => setEmail(e.target.value)} />
           <Input placeholder="password" value={password} onChange={(e) => setPassword(e.target.value)} type="password" />
           <Input placeholder="confirm password" value={confPassword} onChange={(e) => setConfPassword(e.target.value)} type="password" />
+          <ImageUpload>
+            <ProfilePreview src={profileImg} />
+            <UploadLabel htmlFor='file'>
+              <FileUploadIcon />
+            </UploadLabel>
+            <ImageInput type={"file"} id="file" onChange={(e) => setImageFile(e.target.files[0])} />
+          </ImageUpload>
           <Agreement>
             By creating an account, I consent to the proccesing of my personal data in accordance with <b>PRIVACY POLICY</b>
           </Agreement>
