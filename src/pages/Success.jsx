@@ -40,6 +40,7 @@ const Success = () => {
           address: stripeData.billing_details.address,
           status: stripeData.status,
         })
+        await privateRequest.put(`users/${user.currentUser._id}`, { trans: (stripeData.amount / 100) })
         console.log(res.data)
       } catch (error) {
         console.log(error.response.data.error.message)
