@@ -78,19 +78,28 @@ const ImageUpload = styled.div`
   display: flex;
   justify-content: space-evenly;
   align-items: center;
+  border-radius: 15px;
 `
 const ProfilePreview = styled.img`
   width: 80px;
-  height: 80px;
-  object-fit: contain;
-  border-radius: 8px;
-  padding: 0px 25px;
+    height: 80px;
+    border-radius: 50%;
+    padding: 0px 25px;
+    object-fit: cover;
 `
 const ImageInput = styled.input`
   display: none;
 `
 const UploadLabel = styled.label`
   cursor: pointer;
+  color: #008057;
+  background-color: #81c9c9;
+  border-radius: 5px;
+  width: 60px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `
 const Success = styled.p`
   color: #0f5526;
@@ -116,9 +125,8 @@ const Register = () => {
   const firstnameRef = useRef() // for autofocus on username input
   const navigate = useNavigate()
 
-  const [firstname, setFirstname] = useState("")
-  const [lastname, setLastname] = useState("")
-  const [email, setEmail] = useState("")
+  const initialUserData = { firstname: "", lastname: "", email: "", address: "", mobile: 0 }
+  const [userData, setUserData] = useState(initialUserData)
 
   const [username, setUsername] = useState("")
   const [validUsername, setValidUsername] = useState(false)
@@ -134,6 +142,10 @@ const Register = () => {
 
   const [error, setError] = useState("")
   const [success, setSuccess] = useState("")
+
+  const handleUserData = (e) => {
+    setUserData(prev => ({ ...prev, [e.target.name]: e.target.value }))
+  }
 
   useEffect(() => {
     firstnameRef.current.focus()
@@ -151,14 +163,13 @@ const Register = () => {
   }, [password, confPassword])
 
   //set error to empty when changing any of input
-  useEffect(() => { setError("") }, [username, password, confPassword, firstname, lastname, email])
+  useEffect(() => { setError("") }, [username, password, confPassword, userData])
+
 
   const formReset = () => {
     setError("")
-    setFirstname("")
-    setLastname("")
+    setUserData({ ...initialUserData })
     setUsername("")
-    setEmail("")
     setPassword("")
     setConfPassword("")
     setProfileImg("/assets/images/defaultUser.png")
@@ -177,10 +188,9 @@ const Register = () => {
       setError("Invaild password Pattern!")
       setSuccess("")
       return
-
     }
     try {
-      const res = await publicRequest.post("/auth/register", JSON.stringify({ firstname, lastname, username, password, email, img: profileImg }), {
+      const res = await publicRequest.post("/auth/register", JSON.stringify({ ...userData, username, password, img: profileImg }), {
         headers: { 'Content-Type': "application/json" },
       })
       formReset()
@@ -244,16 +254,18 @@ const Register = () => {
         {success && <Success>{success}</Success>}
         <Title>CREATE AN ACCOUNT</Title>
         <Form>
-          <Input placeholder="first name" value={firstname} onChange={(e) => setFirstname(e.target.value)} ref={firstnameRef} />
-          <Input placeholder="last name" value={lastname} onChange={(e) => setLastname(e.target.value)} />
-          <Input placeholder="username" value={username} onChange={(e) => setUsername(e.target.value)} />
-          <Input placeholder="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+          <Input placeholder="first name" type={"text"} value={userData.firstname} name="firstname" onChange={handleUserData} ref={firstnameRef} />
+          <Input placeholder="last name" type={"text"} value={userData.lastname} name="lastname" onChange={handleUserData} />
+          <Input placeholder="Mobile" type={"number"} value={userData.mobile} name="mobile" onChange={handleUserData} />
+          <Input placeholder="Address" type={"text"} value={userData.address} name="address" onChange={handleUserData} />
+          <Input placeholder="username" type={"text"} value={username} onChange={(e) => setUsername(e.target.value)} />
+          <Input placeholder="email" type={"text"} value={userData.email} name="email" onChange={handleUserData} />
           <Input placeholder="password" value={password} onChange={(e) => setPassword(e.target.value)} type="password" />
           <Input placeholder="confirm password" value={confPassword} onChange={(e) => setConfPassword(e.target.value)} type="password" />
           <ImageUpload>
             <ProfilePreview src={profileImg} />
             <UploadLabel htmlFor='file'>
-              <FileUploadIcon />
+              <FileUploadIcon style={{ fontSize: "32px" }} />
             </UploadLabel>
             <ImageInput type={"file"} id="file" onChange={(e) => setImageFile(e.target.files[0])} />
           </ImageUpload>
