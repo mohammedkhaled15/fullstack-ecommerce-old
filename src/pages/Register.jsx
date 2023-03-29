@@ -138,7 +138,7 @@ const Register = () => {
   const [validConfPassword, setValidConfPassword] = useState(false)
 
   const [imageFile, setImageFile] = useState("")
-  const [profileImg, setProfileImg] = useState("/assets/images/defaultUser.png")
+  const [profileImg, setProfileImg] = useState("https://firebasestorage.googleapis.com/v0/b/ecommerce-images-pr.appspot.com/o/profileImgs%2FdefaultUser.png?alt=media&token=9387917b-a5a8-490d-968c-b8da0e1c9b1f")
 
   const [error, setError] = useState("")
   const [success, setSuccess] = useState("")

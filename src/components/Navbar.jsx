@@ -73,7 +73,6 @@ ${mobile({ fontSize: "12px", marginLeft: "10px" })}
 
 const Navbar = () => {
 
-  const refresh = useRefreshToken()
   const cart = useSelector(state => state.cart)
 
   const user = useSelector(state => state.user)
@@ -122,7 +121,6 @@ const Navbar = () => {
             </MenueItem>
           </Link>
         </Right>
-        {/* <button onClick={() => refresh()}>Refresh</button> */}
       </Wrapper>
     </Container>
   )
