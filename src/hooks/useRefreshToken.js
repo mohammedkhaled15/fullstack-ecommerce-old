@@ -1,6 +1,7 @@
 import { useDispatch } from "react-redux";
 import { publicRequest } from "../requestMethods";
-import { updateAccessToken } from "../redux/userSlice";
+import { resetUser, updateAccessToken } from "../redux/userSlice";
+import { persistor } from "./../redux/store";
 
 const useRefreshToken = () => {
   const dispatch = useDispatch();
@@ -15,6 +16,10 @@ const useRefreshToken = () => {
       return accessToken;
     } catch (error) {
       console.log(error);
+      if (error.response?.status === 403) {
+        dispatch(resetUser());
+        persistor.purge();
+      }
     }
   };
   return getAccessToken;
